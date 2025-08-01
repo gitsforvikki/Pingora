@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { ReduxProvider } from "@/utils/ReduxProvider";
 import Navbar from "@/component/ui/navbar/Navbar";
 import { Footer } from "@/component/ui/footer/Footer";
 import "./globals.css";
@@ -18,7 +17,7 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <Navbar />
-        <ReduxProvider>{children}</ReduxProvider>
+        {children}
         <Footer />
       </body>
     </html>
