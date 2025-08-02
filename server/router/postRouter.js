@@ -90,4 +90,69 @@ router.delete("/:postId", authenticate, async (request, response) => {
   }
 });
 
+//like a post
+router.put("/likes/:postId", authenticate, async (request, response) => {
+  try {
+    const postId = request.params.postId;
+    const user = request.user.id;
+    const post = await Post.findById(postId);
+    if (!post) {
+      return response.status(400).json({ errors: [{ msg: "Post not found" }] });
+    }
+    //check is user already likes or not
+    const isAlreadyLiked =
+      post.likes.filter((like) => like.user.toString() === user).length > 0;
+    if (isAlreadyLiked) {
+      return response
+        .status(400)
+        .json({ errors: [{ msg: "Post already liked by you." }] });
+    }
+    post.likes.unshift({ user: user });
+    post.save();
+    response.status(200).json({ post: post });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ errors: [{ msg: error.message }] });
+  }
+});
+
+//dislike a post
+router.put("/unlike/:postId", authenticate, async (request, response) => {
+  try {
+    const postId = request.params.postId;
+    const userId = request.user.id;
+
+    let post = await Post.findById(postId);
+    if (!post) {
+      return response.status(404).json({
+        errors: [{ msg: "Post not found" }],
+      });
+    }
+
+    const likeIndex = post.likes.findIndex(
+      (like) => like.user.toString() === userId
+    );
+
+    if (likeIndex === -1) {
+      return response.status(400).json({
+        errors: [{ msg: "You have not liked this post, cannot unlike" }],
+      });
+    }
+
+    // Remove the like
+    post.likes.splice(likeIndex, 1);
+    await post.save();
+
+    return response.status(200).json({
+      msg: "Post unliked successfully",
+      post: post,
+    });
+  } catch (error) {
+    console.error("Error in unlike route:", error);
+    return response.status(500).json({
+      errors: [{ msg: error.message }],
+    });
+  }
+});
+
 export default router;
