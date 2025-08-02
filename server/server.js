@@ -2,6 +2,8 @@ import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import userRouter from "./router/userRouter.js";
+import postRouter from "./router/postRouter.js";
 
 dotenv.config();
 
@@ -21,8 +23,9 @@ mongoose
   });
 
 // Routes
-import userRouter from "./router/userRouter.js";
+
 app.use("/api/users", userRouter);
+app.use("/api/posts", postRouter);
 
 // Root route
 app.get("/", (req, res) => {

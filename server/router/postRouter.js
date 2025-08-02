@@ -40,4 +40,54 @@ router.post(
   }
 );
 
+//get all posts
+router.get("/", authenticate, async (req, res) => {
+  try {
+    const posts = await Post.find();
+    if (!posts) {
+      return res.status(400).json({ error: [{ msg: "No any post found." }] });
+    }
+    res.status(200).json({ posts: posts });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ errors: [{ msg: error.message }] });
+  }
+});
+
+//get a post by postId
+router.get("/:postId", authenticate, async (request, response) => {
+  try {
+    const postId = request.params.postId;
+    const post = await Post.findById(postId);
+    if (!post) {
+      response.status(400).json({ errors: [{ msg: "Post not found." }] });
+    }
+    response.status(200).json({ post: post });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ errors: [{ msg: error.message }] });
+  }
+});
+
+// delete a post by postId
+router.delete("/:postId", authenticate, async (request, response) => {
+  try {
+    const postId = request.params.postId;
+    let post = await Post.findById(postId);
+    if (!post) {
+      response
+        .status(400)
+        .json({ errors: [{ msg: "No post found for delete" }] });
+    }
+    post = await Post.findByIdAndDelete(postId);
+    response.status(200).json({
+      msg: "Post delete successfully.",
+      post: post,
+    });
+  } catch (error) {
+    console.log(error);
+    response.status(500).json({ errors: [{ mes: error.message }] });
+  }
+});
+
 export default router;
