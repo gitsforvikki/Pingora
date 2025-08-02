@@ -155,4 +155,87 @@ router.put("/unlike/:postId", authenticate, async (request, response) => {
   }
 });
 
+//comment on a post
+router.post(
+  "/comment/:postId",
+  [body("text").notEmpty().withMessage("Text required")],
+  authenticate,
+  async (request, response) => {
+    let errors = validationResult(request);
+    if (!errors.isEmpty()) {
+      return response.status(401).json({ errors: errors.array() });
+    }
+    try {
+      const postId = request.params.postId;
+      const userId = request.user.id;
+      const user = await User.findById(userId);
+      let post = await Post.findById(postId);
+      if (!post) {
+        return response.status(401).json({ msg: "No post found" });
+      }
+      const newComment = {
+        user: userId,
+        name: user.name,
+        avatar: user.avatar,
+        text: request.body.text,
+      };
+      post.comments.unshift(newComment);
+      post = await post.save();
+      response.status(200).json({
+        msg: "Comment successfull!",
+        post: post,
+      });
+    } catch (error) {
+      console.log(error);
+      response.status(500).json({ errors: [{ msg: error.message }] });
+    }
+  }
+);
+
+//delete comment
+router.delete(
+  "/comment/:postId/:commentId",
+  authenticate,
+  async (request, response) => {
+    try {
+      const postId = request.params.postId;
+      const commentId = request.params.commentId;
+      let post = await Post.findById(postId);
+      if (!post) {
+        return response
+          .status(400)
+          .json({ errors: [{ msg: "Post not found." }] });
+      }
+      const comment = post.comments.find((comment) => comment.id === commentId);
+      if (!comment) {
+        return response
+          .status(400)
+          .json({ errors: [{ msg: "Comment not found" }] });
+      }
+      //check the same user has made the comment or not
+      const isAuthentic =
+        comment.user.toString() === request.user.id.toString();
+      if (!isAuthentic) {
+        return response.status(401).json({
+          errors: [{ msg: "You are not authorized to delete comment" }],
+        });
+      }
+      const commentIndex = post.comments
+        .map((comment) => comment.user.toString())
+        .indexOf(request.user.id);
+      if (commentIndex !== -1) {
+        post.comments.splice(commentIndex, 1);
+        await post.save();
+        response.status(200).json({
+          msg: "Comment is deleted",
+          post: post,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      response.status(500).json({ errors: [{ msg: error.message }] });
+    }
+  }
+);
+
 export default router;
