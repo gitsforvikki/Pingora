@@ -1,8 +1,4 @@
-import {
-  createAsyncThunk,
-  createSlice,
-  isRejectedWithValue,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import api from "@/utils/api";
 import { ApiError } from "@/utils/types";
 import { getAuthToken, isLoggedIn, setAuthToken } from "@/utils/AuthUtil";
@@ -70,7 +66,6 @@ export const getCurrentUser = createAsyncThunk<
     if (!isLoggedIn()) {
       return rejectWithValue("No authentication token found");
     }
-    console.log("token", getAuthToken());
     setAuthToken(getAuthToken());
     const response = await api.get("/users/me");
     console.log("Response Data:", response.data);
@@ -87,7 +82,7 @@ export const getCurrentUser = createAsyncThunk<
   }
 });
 
-// Define the initial state with correct types
+// Define the initial state
 const initialState = {
   userinfo: null as User | null,
   isAuthenticated: false,

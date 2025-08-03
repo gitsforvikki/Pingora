@@ -13,19 +13,20 @@ const Navbar = () => {
     { name: "Login", href: routes.LOGIN },
     { name: "Register", href: routes.REGISTER },
     { name: "profile", href: routes.USER },
+    { name: "Post", href: routes.POST },
   ];
 
   return (
     <nav className="border-navbar-border sticky top-0 z-50 backdrop-blur-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container">
         <div className="flex justify-between items-center h-16">
           <div className="flex-shrink-0">
-            <a
-              href="#"
+            <Link
+              href={routes.HOME}
               className="text-xl font-bold text-navbar-text hover:text-navbar-text-hover transition-colors"
             >
               PostFlow
-            </a>
+            </Link>
           </div>
 
           {/* Desktop Navigation */}
@@ -71,17 +72,17 @@ const Navbar = () => {
         <div className="md:hidden">
           <div className="px-2 pt-2 pb-3 space-y-1 bg-navbar-mobile-bg border-t border-navbar-border">
             {navigation.map((item) => (
-              <a
+              <Link
                 key={item.name}
                 href={item.href}
                 className="text-navbar-text hover:text-navbar-text-hover block px-3 py-2 rounded-md text-base font-medium transition-colors duration-200 hover:bg-muted/50"
                 onClick={() => setIsOpen(false)}
               >
                 {item.name}
-              </a>
+              </Link>
             ))}
             <div className="px-3 pt-4">
-              <Link href="/register">
+              <Link href={routes.REGISTER}>
                 <button className="w-full">Get Started</button>
               </Link>
             </div>

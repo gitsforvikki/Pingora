@@ -7,7 +7,7 @@ import { body, validationResult } from "express-validator";
 const router = express.Router();
 
 router.post(
-  "/",
+  "/create",
   [
     body("text").notEmpty().withMessage("Text is required"),
     body("image").notEmpty().withMessage("Image is required"),
@@ -29,10 +29,7 @@ router.post(
       };
       const post = new Post(newPost);
       await post.save();
-      res.status(200).json({
-        msg: "Post created success.",
-        post: post,
-      });
+      res.status(200).json({ post: post });
     } catch (error) {
       console.log(error);
       res.status(500).json({ errors: [{ msg: error.message }] });
