@@ -100,9 +100,15 @@ router.put("/likes/:postId", authenticate, async (request, response) => {
     const isAlreadyLiked =
       post.likes.filter((like) => like.user.toString() === user).length > 0;
     if (isAlreadyLiked) {
-      return response
-        .status(400)
-        .json({ errors: [{ msg: "Post already liked by you." }] });
+      const likeIndex = post.likes.findIndex(
+        (like) => like.user.toString() === user
+      );
+
+      // Remove the like
+      post.likes.splice(likeIndex, 1);
+      await post.save();
+
+      return response.status(200).json({ post: post });
     }
     post.likes.unshift({ user: user });
     post.save();
