@@ -78,7 +78,6 @@ router.delete("/:postId", authenticate, async (request, response) => {
     }
     post = await Post.findByIdAndDelete(postId);
     response.status(200).json({
-      msg: "Post delete successfully.",
       post: post,
     });
   } catch (error) {

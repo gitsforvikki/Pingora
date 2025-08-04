@@ -173,3 +173,35 @@ export const deleteComment = createAsyncThunk<
     return rejectWithValue(message);
   }
 });
+
+//delet post
+export const deletePost = createAsyncThunk<
+  { post: PostType },
+  { postId: string },
+  { rejectValue: string }
+>("/posts/deletePost", async ({ postId }, { rejectWithValue }) => {
+  try {
+    if (!isLoggedIn()) {
+      return rejectWithValue("You must be logged in to delete a comment.");
+    }
+    setAuthToken(getAuthToken());
+
+    const res = await api.delete(`/posts/${postId}`);
+    return res.data;
+  } catch (error: unknown) {
+    const err = error as {
+      response?: {
+        data?: { errors?: Array<{ msg: string }>; message?: string };
+      };
+      message?: string;
+    };
+
+    const message =
+      err.response?.data?.message ||
+      err.response?.data?.errors?.[0]?.msg ||
+      err.message ||
+      "Failed to delete comment";
+
+    return rejectWithValue(message);
+  }
+});

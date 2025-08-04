@@ -5,6 +5,7 @@ import { useAppDispatch } from "@/lib/customHook/hook";
 import {
   addComment,
   deleteComment,
+  deletePost,
   getAllPosts,
   likePost,
 } from "@/lib/redux/slices/post/postActions";
@@ -31,6 +32,12 @@ export default function PostPage() {
   const handleDeleteComment = (postId: string, commentId: string) => {
     dispatch(deleteComment({ postId, commentId })).unwrap();
   };
+
+  //delete post
+  const handleDeletePost = (postId: string) => {
+    dispatch(deletePost({ postId }));
+  };
+
   return (
     <div className="container">
       {loading ? (
@@ -43,6 +50,7 @@ export default function PostPage() {
             onLike={handleLike}
             onComment={handleComment}
             onDeleteComment={handleDeleteComment}
+            onDeletePost={handleDeletePost}
           />
         ))
       ) : (

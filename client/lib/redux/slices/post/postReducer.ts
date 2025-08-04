@@ -3,6 +3,7 @@ import {
   addComment,
   createPost,
   deleteComment,
+  deletePost,
   getAllPosts,
   getPostById,
   likePost,
@@ -128,6 +129,21 @@ const postSlice = createSlice({
       .addCase(getPostById.rejected, (state, action) => {
         state.loading = false;
         state.post = null;
+        state.error = action.payload as string;
+      })
+      //delete post
+      .addCase(deletePost.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(deletePost.fulfilled, (state, action) => {
+        state.loading = false;
+        state.posts = state.posts.filter(
+          (post) => post.__v.toString() !== action.payload.post.__v.toString()
+        );
+      })
+      .addCase(deletePost.rejected, (state, action) => {
+        state.loading = false;
         state.error = action.payload as string;
       });
   },
