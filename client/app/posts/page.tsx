@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useAppDispatch } from "@/lib/customHook/hook";
 import {
   addComment,
+  deleteComment,
   getAllPosts,
   likePost,
 } from "@/lib/redux/slices/post/postActions";
@@ -18,23 +19,17 @@ export default function PostPage() {
   }, [dispatch]);
 
   //like or dislike post
-  const handleLike = async (postId: string) => {
-    try {
-      await dispatch(likePost({ postId })).unwrap();
-      dispatch(getAllPosts());
-    } catch (err) {
-      console.error("Like failed:", err);
-    }
+  const handleLike = (postId: string) => {
+    dispatch(likePost({ postId })).unwrap();
   };
 
   //add a comment
-  const handleComment = async (postId: string, text: string) => {
-    try {
-      await dispatch(addComment({ postId, text })).unwrap();
-      dispatch(getAllPosts());
-    } catch (err) {
-      console.error("Comment failed:", err);
-    }
+  const handleComment = (postId: string, text: string) => {
+    dispatch(addComment({ postId, text })).unwrap();
+  };
+  //add a comment
+  const handleDeleteComment = (postId: string, commentId: string) => {
+    dispatch(deleteComment({ postId, commentId })).unwrap();
   };
   return (
     <div className="container">
@@ -47,6 +42,7 @@ export default function PostPage() {
             post={post}
             onLike={handleLike}
             onComment={handleComment}
+            onDeleteComment={handleDeleteComment}
           />
         ))
       ) : (

@@ -1,5 +1,12 @@
 import { StaticImageData } from "next/image";
-import { addComment, createPost, getAllPosts, likePost } from "./postActions";
+import {
+  addComment,
+  createPost,
+  deleteComment,
+  getAllPosts,
+  getPostById,
+  likePost,
+} from "./postActions";
 import { createSlice } from "@reduxjs/toolkit";
 
 export interface PostType {
@@ -74,24 +81,53 @@ const postSlice = createSlice({
         state.error = null;
       })
       .addCase(likePost.fulfilled, (state, action) => {
-        state.post = action.payload.post;
-        state.error = null;
+        const updatedPost = action.payload.post;
+        const index = state.posts.findIndex((p) => p._id === updatedPost._id);
+        if (index !== -1) {
+          state.posts[index] = updatedPost;
+        }
       })
       .addCase(likePost.rejected, (state, action) => {
         state.error = action.payload as string;
       })
       .addCase(addComment.pending, (state) => {
-        state.loading = true;
         state.error = null;
-
       })
       .addCase(addComment.fulfilled, (state, action) => {
+        const updatedPost = action.payload.post;
+        const index = state.posts.findIndex((p) => p._id === updatedPost._id);
+        if (index !== -1) {
+          state.posts[index] = updatedPost;
+        }
+      })
+      .addCase(addComment.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(deleteComment.pending, (state) => {
+        state.error = null;
+      })
+      .addCase(deleteComment.fulfilled, (state, action) => {
+        const updatedPost = action.payload.post;
+        const index = state.posts.findIndex((p) => p._id === updatedPost._id);
+        if (index !== -1) {
+          state.posts[index] = updatedPost;
+        }
+      })
+      .addCase(deleteComment.rejected, (state, action) => {
+        state.error = action.payload as string;
+      })
+      .addCase(getPostById.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getPostById.fulfilled, (state, action) => {
         state.loading = false;
         state.post = action.payload.post;
         state.error = null;
       })
-      .addCase(addComment.rejected, (state, action) => {
+      .addCase(getPostById.rejected, (state, action) => {
         state.loading = false;
+        state.post = null;
         state.error = action.payload as string;
       });
   },

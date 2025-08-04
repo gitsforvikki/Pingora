@@ -25,6 +25,27 @@ export const getAllPosts = createAsyncThunk<PostType[]>(
   }
 );
 
+//get a comment by id
+export const getPostById = createAsyncThunk<
+  { post: PostType },
+  { postId: string },
+  { rejectValue: string }
+>("/posts/getSinglePost", async ({ postId }, { rejectWithValue }) => {
+  try {
+    if (!isLoggedIn) {
+      return rejectWithValue("No authentication token found");
+    }
+    setAuthToken(getAuthToken());
+    const response = await api.get(`/posts/${postId}`);
+    return response.data.post;
+  } catch (error) {
+    const err = error as ApiError;
+    const message =
+      err.response?.data?.message || err.message || "Failed to fetch user";
+    return rejectWithValue(message);
+  }
+});
+
 //create a post
 export const createPost = createAsyncThunk<
   { msg: string; post: PostType },
@@ -113,6 +134,41 @@ export const addComment = createAsyncThunk<
       err.response?.data?.errors?.[0]?.msg ||
       err.message ||
       "Failed to add comment";
+
+    return rejectWithValue(message);
+  }
+});
+
+//delete comment
+export const deleteComment = createAsyncThunk<
+  { post: PostType },
+  { postId: string; commentId: string },
+  { rejectValue: string }
+>("post/deleteComment", async ({ postId, commentId }, { rejectWithValue }) => {
+  try {
+    if (!isLoggedIn()) {
+      return rejectWithValue("You must be logged in to delete a comment.");
+    }
+
+    setAuthToken(getAuthToken());
+
+    // Make DELETE request
+    const response = await api.delete(`/posts/comment/${postId}/${commentId}`);
+
+    return response.data;
+  } catch (error: unknown) {
+    const err = error as {
+      response?: {
+        data?: { errors?: Array<{ msg: string }>; message?: string };
+      };
+      message?: string;
+    };
+
+    const message =
+      err.response?.data?.message ||
+      err.response?.data?.errors?.[0]?.msg ||
+      err.message ||
+      "Failed to delete comment";
 
     return rejectWithValue(message);
   }

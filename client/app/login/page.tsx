@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Mail, Lock } from "lucide-react";
-import { login } from "@/lib/redux/slices/userSlice";
+import { getCurrentUser, login } from "@/lib/redux/slices/userSlice";
 import { useAppDispatch } from "@/lib/customHook/hook";
 
 export default function LoginPage() {
@@ -31,6 +31,7 @@ export default function LoginPage() {
       const result = await dispatch(login(formData)).unwrap();
       // If the login is successful, navigate to another page (e.g., dashboard)
       console.log("Login successful:", result);
+      dispatch(getCurrentUser());
       router.push("/"); // Navigate to your desired page
     } catch (error) {
       console.error("An unexpected error occurred:", error);

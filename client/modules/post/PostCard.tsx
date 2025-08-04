@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Image from "next/image";
 import {
   Heart,
@@ -11,14 +11,22 @@ import {
 } from "lucide-react";
 import { PostType } from "@/lib/redux/slices/post/postReducer";
 import { normalizeImageUrl } from "@/utils/imageUtils";
+import { useSelector } from "react-redux";
+import { RootState } from "@/lib/redux/store";
 
 interface PostCardProps {
   post: PostType;
   onLike?: (postId: string) => void;
   onComment?: (postId: string, comment: string) => void;
+  onDeleteComment?: (postId: string, commentId: string) => void;
 }
 
-export function PostCard({ post, onLike, onComment }: PostCardProps) {
+export function PostCard({
+  post,
+  onLike,
+  onComment,
+  onDeleteComment,
+}: PostCardProps) {
   const [isLiked, setIsLiked] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
@@ -36,7 +44,7 @@ export function PostCard({ post, onLike, onComment }: PostCardProps) {
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`;
     return new Date(date).toLocaleDateString();
   };
-
+  const { userinfo } = useSelector((state: RootState) => state.user);
   const handleLike = () => {
     setIsLiked(!isLiked);
     onLike?.(post._id);
@@ -149,25 +157,38 @@ export function PostCard({ post, onLike, onComment }: PostCardProps) {
           {post.comments.length > 0 && (
             <div className="space-y-3">
               {displayedComments.map((comment) => (
-                <div key={comment._id} className="flex space-x-3">
-                  <Image
-                    src={normalizeImageUrl(post.avatar)}
-                    alt={`${comment.name}'s avatar`}
-                    className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-                    width={100}
-                    height={100}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <div className="bg-gray-50 rounded-lg px-3 py-2">
-                      <p className="font-semibold text-sm text-gray-900">
-                        {comment.name}
+                <div
+                  key={comment._id}
+                  className="flex space-x-3 justify-between items-center hover:bg-gray-100 rounded-xl p-2"
+                >
+                  <div>
+                    <Image
+                      src={normalizeImageUrl(post.avatar)}
+                      alt={`${comment.name}'s avatar`}
+                      className="w-8 h-8 rounded-full object-cover flex-shrink-0"
+                      width={100}
+                      height={100}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="px-3 py-2">
+                        <p className="font-semibold text-sm text-gray-900">
+                          {comment.name}
+                        </p>
+                        <p className="text-gray-800 text-sm">{comment.text}</p>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1 ml-3">
+                        {formatTimeAgo(comment.date)}
                       </p>
-                      <p className="text-gray-800 text-sm">{comment.text}</p>
                     </div>
-                    <p className="text-xs text-gray-500 mt-1 ml-3">
-                      {formatTimeAgo(comment.date)}
-                    </p>
                   </div>
+                  {comment.user.toString() === userinfo?._id.toString() ? (
+                    <h2
+                      className="text-blue-700 hover:text-red-500 hover:cursor-pointer"
+                      onClick={() => onDeleteComment?.(post._id, comment._id)}
+                    >
+                      Delete
+                    </h2>
+                  ) : null}
                 </div>
               ))}
 
