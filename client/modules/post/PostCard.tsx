@@ -32,6 +32,21 @@ export function PostCard({
   const [newComment, setNewComment] = useState("");
   const [showAllComments, setShowAllComments] = useState(false);
 
+  const { userinfo } = useSelector((state: RootState) => state.user);
+
+  // Sync isLiked based on current user and post.likes
+  useEffect(() => {
+    if (!userinfo || !post.likes) {
+      setIsLiked(false);
+      return;
+    }
+
+    const hasLiked = post.likes.some(
+      (like) => like.user?.toString() === userinfo._id?.toString()
+    );
+    setIsLiked(hasLiked);
+  }, [post.likes, userinfo]);
+
   const formatTimeAgo = (date: Date) => {
     const now = new Date();
     const diffInSeconds = Math.floor(
@@ -44,10 +59,11 @@ export function PostCard({
     if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)}d`;
     return new Date(date).toLocaleDateString();
   };
-  const { userinfo } = useSelector((state: RootState) => state.user);
+
   const handleLike = () => {
-    setIsLiked(!isLiked);
-    onLike?.(post._id);
+    if (!onLike) return;
+    setIsLiked((prev) => !prev);
+    onLike(post._id);
   };
 
   const handleComment = () => {
@@ -131,8 +147,12 @@ export function PostCard({
                 : "text-gray-600 hover:bg-gray-100"
             }`}
           >
-            <Heart className={`w-5 h-5 ${isLiked ? "fill-current" : ""}`} />
-            <span className="font-medium">Like</span>
+            <Heart
+              className={`w-5 h-5 ${
+                isLiked ? "fill-current text-red-500" : ""
+              }`}
+            />
+            <span className="font-medium">{isLiked ? "Liked" : "Like"}</span>
           </button>
 
           <button
@@ -159,36 +179,35 @@ export function PostCard({
               {displayedComments.map((comment) => (
                 <div
                   key={comment._id}
-                  className="flex space-x-3 justify-between items-center hover:bg-gray-100 rounded-xl p-2"
+                  className="flex space-x-3 justify-between items-start hover:bg-gray-100 rounded-xl p-2"
                 >
-                  <div>
+                  <div className="flex space-x-3">
                     <Image
-                      src={normalizeImageUrl(post.avatar)}
+                      src={normalizeImageUrl(comment.avatar)}
                       alt={`${comment.name}'s avatar`}
                       className="w-8 h-8 rounded-full object-cover flex-shrink-0"
                       width={100}
                       height={100}
                     />
                     <div className="flex-1 min-w-0">
-                      <div className="px-3 py-2">
-                        <p className="font-semibold text-sm text-gray-900">
-                          {comment.name}
-                        </p>
-                        <p className="text-gray-800 text-sm">{comment.text}</p>
-                      </div>
-                      <p className="text-xs text-gray-500 mt-1 ml-3">
-                        {formatTimeAgo(comment.date)}
+                      <p className="font-semibold text-sm text-gray-900">
+                        {comment.name}
                       </p>
+                      <p className="text-gray-800 text-sm">{comment.text}</p>
+                      <span className="text-xs text-gray-500 mt-1">
+                        {formatTimeAgo(comment.date)}
+                      </span>
                     </div>
                   </div>
-                  {comment.user.toString() === userinfo?._id.toString() ? (
-                    <h2
-                      className="text-blue-700 hover:text-red-500 hover:cursor-pointer"
+
+                  {comment.user.toString() === userinfo?._id.toString() && (
+                    <button
                       onClick={() => onDeleteComment?.(post._id, comment._id)}
+                      className="text-red-500 hover:text-red-700 text-xs font-medium hover:underline cursor-pointer"
                     >
                       Delete
-                    </h2>
-                  ) : null}
+                    </button>
+                  )}
                 </div>
               ))}
 
@@ -215,13 +234,6 @@ export function PostCard({
 
           {/* Add Comment */}
           <div className="flex space-x-3 pt-2">
-            {/* <Image
-              src="https://images.pexels.com/photos/771742/pexels-photo-771742.jpeg?auto=compress&cs=tinysrgb&w=100"
-              alt="Your avatar"
-              className="w-8 h-8 rounded-full object-cover flex-shrink-0"
-              width={100}
-              height={100}
-            /> */}
             <div className="flex-1 flex space-x-2">
               <input
                 type="text"
