@@ -71,22 +71,19 @@ const postSlice = createSlice({
         state.error = action.payload as string;
       })
       .addCase(likePost.pending, (state) => {
-        // state.loading = true;
         state.error = null;
       })
       .addCase(likePost.fulfilled, (state, action) => {
-        // state.loading = false;
         state.post = action.payload.post;
         state.error = null;
       })
       .addCase(likePost.rejected, (state, action) => {
-        // state.loading = false;
         state.error = action.payload as string;
       })
       .addCase(addComment.pending, (state) => {
         state.loading = true;
         state.error = null;
-        
+
       })
       .addCase(addComment.fulfilled, (state, action) => {
         state.loading = false;

@@ -8,7 +8,6 @@ import {
   likePost,
 } from "@/lib/redux/slices/post/postActions";
 import { RootState } from "@/lib/redux/store";
-import Image from "next/image";
 import { PostCard } from "@/modules/post/PostCard";
 
 export default function PostPage() {
@@ -16,15 +15,27 @@ export default function PostPage() {
   const { posts, loading } = useSelector((state: RootState) => state.post);
   useEffect(() => {
     dispatch(getAllPosts());
-  }, [dispatch, posts]);
-  const handleLike = (postId: string) => {
-    dispatch(likePost({ postId }));
+  }, [dispatch]);
+
+  //like or dislike post
+  const handleLike = async (postId: string) => {
+    try {
+      await dispatch(likePost({ postId })).unwrap();
+      dispatch(getAllPosts());
+    } catch (err) {
+      console.error("Like failed:", err);
+    }
   };
 
-  const handleComment = (postId: string, text: string) => {
-    dispatch(addComment({ postId, text }));
+  //add a comment
+  const handleComment = async (postId: string, text: string) => {
+    try {
+      await dispatch(addComment({ postId, text })).unwrap();
+      dispatch(getAllPosts());
+    } catch (err) {
+      console.error("Comment failed:", err);
+    }
   };
-
   return (
     <div className="container">
       {loading ? (
