@@ -151,7 +151,7 @@ export function PostCard({
 
       {/* Post Image */}
       {post.image && (
-        <div className="relative">
+        <div className="relative px-2">
           <Image
             src={
               typeof post.image === "string" ? post.image : post.image.src || ""

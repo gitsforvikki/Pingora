@@ -3,7 +3,7 @@ import { navigation } from "@/constant";
 
 export const Footer = () => {
   return (
-    <footer className="bg-gray-200 pt-6 md:pt-8 lg:pt-12 rounded-t-2xl">
+    <footer className="bg-gray-200 rounded-t-2xl">
       <div className="container">
         <div className="py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">

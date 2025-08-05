@@ -45,7 +45,7 @@ export default function PostPage() {
           <h2 className="text-xl lg:text-3xl">Loading...</h2>
         </div>
       ) : posts?.length > 0 ? (
-        <div className="flex flex-col gap-y-10 mt-10 md:mt-12 lg:mt-16">
+        <div className="flex flex-col gap-y-10 my-10 md:my-12 lg:my-16">
           <div>
             <h2 className="text-violet-400 text-2xl lg:text-3xl font-bold leading-[150%]">
               Interact with Our Wonderful Community
