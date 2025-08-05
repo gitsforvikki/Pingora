@@ -29,19 +29,18 @@ export default function LoginPage() {
 
     try {
       const result = await dispatch(login(formData)).unwrap();
-      // If the login is successful, navigate to another page (e.g., dashboard)
       console.log("Login successful:", result);
       dispatch(getCurrentUser());
-      router.push("/"); // Navigate to your desired page
+      router.push("/");
     } catch (error) {
       console.error("An unexpected error occurred:", error);
     }
   };
 
   return (
-    <div className="min-h-screen bg-red-400 bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="rounded-lg border bg-white/80 backdrop-blur-sm shadow-xl">
+        <div className="rounded-lg  bg-white/80 backdrop-blur-sm shadow-xl">
           {/* Header */}
           <div className="flex flex-col space-y-1.5 p-6 text-center pb-6">
             <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -52,7 +51,6 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Content */}
           <div className="p-6 pt-0 space-y-6">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
@@ -71,7 +69,7 @@ export default function LoginPage() {
                     placeholder="Enter your email"
                     value={formData.email}
                     onChange={handleInputChange}
-                    className="text-black flex h-12 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 pl-10 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-all duration-200"
+                    className="text-black flex h-12 w-full rounded-md  bg-transparent px-3 py-2 pl-10 text-sm placeholder:text-gray-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2 transition-all duration-200"
                   />
                 </div>
               </div>

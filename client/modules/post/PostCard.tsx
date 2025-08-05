@@ -37,7 +37,6 @@ export function PostCard({
 
   const { userinfo } = useSelector((state: RootState) => state.user);
 
-  // Sync like status based on current user and post.likes
   useEffect(() => {
     if (!userinfo || !post.likes) {
       setIsLiked(false);
@@ -158,7 +157,7 @@ export function PostCard({
               typeof post.image === "string" ? post.image : post.image.src || ""
             }
             alt="Post content"
-            className="w-full h-auto max-h-96 object-cover"
+            className="w-full h-auto max-h-96 object-contain rounded-2xl"
             width={100}
             height={100}
           />

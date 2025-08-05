@@ -1,6 +1,9 @@
+import Link from "next/link";
+import { navigation } from "@/constant";
+
 export const Footer = () => {
   return (
-    <footer className="border-navbar-border bg-navbar-background">
+    <footer className="bg-gray-200 pt-6 md:pt-8 lg:pt-12 rounded-t-2xl">
       <div className="container">
         <div className="py-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -18,40 +21,18 @@ export const Footer = () => {
               <h4 className="text-sm font-semibold text-navbar-text">
                 Quick Links
               </h4>
-              <ul className="space-y-2">
-                <li>
-                  <a
-                    href="#"
+
+              <div className="flex flex-col gap-y-2">
+                {navigation.map(({ name, href }) => (
+                  <Link
+                    href={href}
+                    key={name}
                     className="text-sm text-muted-foreground hover:text-navbar-text-hover transition-colors"
                   >
-                    Home
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-navbar-text-hover transition-colors"
-                  >
-                    About
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-navbar-text-hover transition-colors"
-                  >
-                    Services
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#"
-                    className="text-sm text-muted-foreground hover:text-navbar-text-hover transition-colors"
-                  >
-                    Contact
-                  </a>
-                </li>
-              </ul>
+                    {name}
+                  </Link>
+                ))}
+              </div>
             </div>
 
             {/* Contact Info */}
@@ -60,8 +41,8 @@ export const Footer = () => {
                 Contact
               </h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p>hello@navbuilder.com</p>
-                <p>+1 (555) 123-4567</p>
+                <p>@postflow.com</p>
+                <p>+91 62014 48872</p>
               </div>
             </div>
           </div>

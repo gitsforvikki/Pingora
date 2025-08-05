@@ -43,9 +43,9 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
+    <div className="min-h-screen background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
-        <div className="rounded-lg border bg-white/80 backdrop-blur-sm shadow-xl">
+        <div className="rounded-lg bg-white/80 backdrop-blur-sm shadow-xl">
           {/* Header */}
           <div className="flex flex-col space-y-1.5 p-6 text-center pb-6">
             <h3 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
@@ -134,7 +134,7 @@ export default function RegisterPage() {
 
               <button
                 type="submit"
-                className="inline-flex items-center justify-center rounded-md text-sm font-medium w-full h-12 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
+                className="inline-flex items-center justify-center rounded-md text-sm font-medium w-full h-12 bg-gradient-to-r gradient-button text-white  transition-all duration-200 transform hover:scale-[1.02] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 focus-visible:ring-offset-2"
               >
                 Sign In
               </button>

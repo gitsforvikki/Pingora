@@ -13,6 +13,7 @@ export const UserLogin = ({ name, email, isAdmin }: UserLoginProps) => {
         {" "}
         {isAdmin ? "Admin" : "Notnhave admin access"}
       </h4>
+      <span className="text-white text-xl underline">Under development..</span>
     </div>
   );
 };
