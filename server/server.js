@@ -9,9 +9,15 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+const FRONTEND = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
 
-app.use(cors());
 app.use(express.json());
+app.use(cors({
+  origin: FRONTEND,
+  credentials: true,
+  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
+  allowedHeaders: ["Content-Type","Authorization"]
+}));
 
 // MongoDB connection
 mongoose
