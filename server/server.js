@@ -9,14 +9,47 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
-const FRONTEND = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
+// Normalize FRONTEND origin (remove trailing slash)
+const rawFrontend = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
+const FRONTEND = rawFrontend.replace(/\/+$/, "");
+
+// Allowed origins array (expand if you have more domains)
+const allowedOrigins = [FRONTEND];
+
+// Headers your clients may send — include both lower/upper-case variants to be safe
+const allowedHeaders = [
+  "Content-Type",
+  "Authorization",
+  "X-Auth-Token",
+  "x-auth-token",
+  "X-Requested-With",
+  "Accept",
+  "Origin"
+];
 
 app.use(express.json());
 app.use(cors({
-  origin: FRONTEND,
+  origin: function (origin, callback) {
+    // allow requests from non-browser clients (no origin) like curl/postman
+    if (!origin) return callback(null, true);
+    const normalizedOrigin = origin.replace(/\/+$/, "");
+    if (allowedOrigins.includes(normalizedOrigin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
   credentials: true,
-  methods: ["GET","POST","PUT","DELETE","OPTIONS"],
-  allowedHeaders: ["Content-Type","Authorization"]
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: allowedHeaders
+}));
+
+// Make sure all OPTIONS preflight requests are handled (explicit handler)
+app.options("*", cors({
+  origin: (origin, cb) => cb(null, allowedOrigins.includes((origin||"").replace(/\/+$/,""))),
+  credentials: true,
+  allowedHeaders: allowedHeaders,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
 // MongoDB connection
