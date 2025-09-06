@@ -18,7 +18,7 @@ const Navbar = () => {
               href={routes.HOME}
               className="text-xl font-bold hover:scale-110 transition-all duration-200 text-white"
             >
-              PostFlow
+              Pingora
             </Link>
           </div>
 

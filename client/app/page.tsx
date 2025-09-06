@@ -1,7 +1,7 @@
 export default function Home() {
   return (
-    <main className="background flex min-h-screen flex-col items-center justify-center p-24">
-      <h1 className="text-4xl font-bold text-white">
+    <main className="background flex min-h-[80vh] lg:min-h-screen flex-col items-center justify-center p-3 lg:p-24">
+      <h1 className="text-4xl font-bold text-white text-center">
         Welcome to the Community!
       </h1>
       <p className="mt-4 text-lg text-white text-center">
