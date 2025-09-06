@@ -45,7 +45,7 @@ app.use(cors({
 }));
 
 // Make sure all OPTIONS preflight requests are handled (explicit handler)
-app.options("*", cors({
+app.options("/*", cors({
   origin: (origin, cb) => cb(null, allowedOrigins.includes((origin||"").replace(/\/+$/,""))),
   credentials: true,
   allowedHeaders: allowedHeaders,
