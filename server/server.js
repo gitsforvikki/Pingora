@@ -9,6 +9,7 @@ dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 5000;
+
 // Normalize FRONTEND origin (remove trailing slash)
 const rawFrontend = process.env.FRONTEND_ORIGIN || "http://localhost:3000";
 const FRONTEND = rawFrontend.replace(/\/+$/, "");
@@ -28,6 +29,7 @@ const allowedHeaders = [
 ];
 
 app.use(express.json());
+
 app.use(cors({
   origin: function (origin, callback) {
     // allow requests from non-browser clients (no origin) like curl/postman
@@ -42,14 +44,6 @@ app.use(cors({
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   allowedHeaders: allowedHeaders
-}));
-
-// Make sure all OPTIONS preflight requests are handled (explicit handler)
-app.options("/*", cors({
-  origin: (origin, cb) => cb(null, allowedOrigins.includes((origin||"").replace(/\/+$/,""))),
-  credentials: true,
-  allowedHeaders: allowedHeaders,
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
 }));
 
 // MongoDB connection
